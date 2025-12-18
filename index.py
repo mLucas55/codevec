@@ -28,7 +28,7 @@ def generate_embeddings(texts):
     response = gemeni.models.embed_content(
         model="gemini-embedding-001",
         contents=texts,
-        config=types.EmbedContentConfig(task_type="CODE_RETRIEVAL_QUERY")
+        config=types.EmbedContentConfig(task_type="RETRIEVAL_DOCUMENT")
     )
 
     # Extract the .values from each ContentEmbedding object
