@@ -4,7 +4,6 @@ import chromadb
 
 from pathlib import Path
 import ast
-import re
 
 from dotenv import load_dotenv
 import os
