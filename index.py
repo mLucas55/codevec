@@ -69,8 +69,8 @@ def index_codebase(root_path):
     
     chunks = []       # The code itself
     metadatas = []    # Info about each chunk
-    ids = []
-    chunk_id = 0
+    ids = []          # list that stores formatted chunk_ids
+    chunk_id = 0      # Counter for formatting
     
     for file_path, content in walk_codebase(root_path):
         print(f"Found: {file_path}")
