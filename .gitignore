@@ -1,2 +1,4 @@
 *.env
 chroma_db
+*.ini
+__pycache__
