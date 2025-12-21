@@ -1,15 +1,9 @@
-from google import genai
-from google.genai import types
 import chromadb
 import sys
 
-from dotenv import load_dotenv
-import os
+from config import set_model
 
-load_dotenv()
-GEMENI_KEY = os.getenv("GEMENI_KEY")
-
-gemeni = genai.Client(api_key=GEMENI_KEY)
+embedder = set_model()
 
 # Load ChromaDB
 client = chromadb.PersistentClient(path="./chroma_db")
@@ -22,15 +16,7 @@ except Exception as e:
     sys.exit(1)
 
 def generate_query_embedding(query):
-    """Generate embedding for the search query"""
-    response = gemeni.models.embed_content(
-        model="gemini-embedding-001",
-        contents=query,
-        config=types.EmbedContentConfig(task_type="CODE_RETRIEVAL_QUERY")
-    )
-    
-    # Extract the values from the first embedding
-    return response.embeddings[0].values
+    return embedder.embed([query], task_type="query")[0]
 
 def search_code(query, n_results=5):
     """Search the indexed codebase"""

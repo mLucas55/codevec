@@ -1,18 +1,13 @@
-from google import genai
-from google.genai import types
 import chromadb
 
 from pathlib import Path
 import ast
 import sys
 
-from dotenv import load_dotenv
-import os
+from config import set_model
 
-load_dotenv()
-GEMENI_KEY = os.getenv("GEMENI_KEY")
+embedder = set_model()
 
-gemeni = genai.Client(api_key=GEMENI_KEY)
 
 # Create persistent storage
 client = chromadb.PersistentClient(path="./chroma_db")
@@ -25,15 +20,7 @@ except:
 collection = client.create_collection(name="code_index")
 
 def generate_embeddings(texts):
-    response = gemeni.models.embed_content(
-        model="gemini-embedding-001",
-        contents=texts,
-        config=types.EmbedContentConfig(task_type="RETRIEVAL_DOCUMENT")
-    )
-
-    # Extract the .values from each ContentEmbedding object
-    embeddings = [embedding.values for embedding in response.embeddings]
-    return embeddings    
+    return embedder.embed(texts)
 
 def walk_codebase(root_path):
     """Find all Python files in a directory"""
