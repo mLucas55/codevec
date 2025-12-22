@@ -1,16 +1,24 @@
-from typing import List
+"""Sorting algorithms implementation"""
 
-def bubble_sort(arr: List[int]) -> List[int]:
-    """Sort an array using bubble sort algorithm"""
+def bubble_sort(arr):
+    """Sort array using bubble sort algorithm"""
     n = len(arr)
+    
     for i in range(n):
+        swapped = False
+        
         for j in range(0, n - i - 1):
             if arr[j] > arr[j + 1]:
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
+                swapped = True
+        
+        if not swapped:
+            break
+    
     return arr
 
-def quick_sort(arr: List[int]) -> List[int]:
-    """Sort an array using quick sort algorithm"""
+def quick_sort(arr):
+    """Sort array using quicksort algorithm"""
     if len(arr) <= 1:
         return arr
     
@@ -21,8 +29,8 @@ def quick_sort(arr: List[int]) -> List[int]:
     
     return quick_sort(left) + middle + quick_sort(right)
 
-def merge_sort(arr: List[int]) -> List[int]:
-    """Sort an array using merge sort algorithm"""
+def merge_sort(arr):
+    """Sort array using merge sort algorithm"""
     if len(arr) <= 1:
         return arr
     
@@ -32,8 +40,8 @@ def merge_sort(arr: List[int]) -> List[int]:
     
     return merge(left, right)
 
-def merge(left: List[int], right: List[int]) -> List[int]:
-    """Helper function to merge two sorted arrays"""
+def merge(left, right):
+    """Merge two sorted arrays"""
     result = []
     i = j = 0
     
@@ -47,14 +55,30 @@ def merge(left: List[int], right: List[int]) -> List[int]:
     
     result.extend(left[i:])
     result.extend(right[j:])
+    
     return result
 
-def binary_search(arr: List[int], target: int) -> int:
-    """Search for a target value in a sorted array using binary search"""
+def insertion_sort(arr):
+    """Sort array using insertion sort"""
+    for i in range(1, len(arr)):
+        key = arr[i]
+        j = i - 1
+        
+        while j >= 0 and arr[j] > key:
+            arr[j + 1] = arr[j]
+            j -= 1
+        
+        arr[j + 1] = key
+    
+    return arr
+
+def binary_search(arr, target):
+    """Search for target in sorted array using binary search"""
     left, right = 0, len(arr) - 1
     
     while left <= right:
         mid = (left + right) // 2
+        
         if arr[mid] == target:
             return mid
         elif arr[mid] < target:

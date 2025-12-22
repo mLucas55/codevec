@@ -26,7 +26,7 @@ def set_model():
         raise ValueError(f"Unknown model type: {model}") 
 
 def get_key(): 
-    if key := os.getenv("semcode_api_key"):
+    if key := os.getenv("codevec_api_key"):
         return key
     else:
         return config['embeddings']['api_key']

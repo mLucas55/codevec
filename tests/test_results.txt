@@ -1,0 +1,284 @@
+SEMANTIC SEARCH TEST RESULTS
+================================================================================
+Timestamp: 2025-12-22 00:15:21
+
+Test 1: check if password is strong enough
+  Expected: validate_password_strength in utils/validation.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 2: generate JWT token for user
+  Expected: create_jwt_token in auth/user_auth.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 3: verify user login credentials
+  Expected: verify_password in auth/user_auth.py
+  Found: Yes
+  Rank: 3
+  Recall@1: False
+  Recall@3: True
+  Recall@5: True
+
+Test 4: prevent brute force login attacks
+  Expected: check_login_attempts in auth/user_auth.py
+  Found: Yes
+  Rank: 3
+  Recall@1: False
+  Recall@3: True
+  Recall@5: True
+
+Test 5: validate email address format
+  Expected: validate_email in utils/validation.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 6: check credit card number is valid
+  Expected: validate_credit_card in utils/validation.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 7: sanitize user input to prevent SQL injection
+  Expected: sanitize_input in utils/validation.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 8: verify phone number format
+  Expected: validate_phone_number in utils/validation.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 9: convert text to URL friendly format
+  Expected: slugify in utils/string_helpers.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 10: hide credit card numbers
+  Expected: mask_sensitive_data in utils/string_helpers.py
+  Found: Yes
+  Rank: 2
+  Recall@1: False
+  Recall@3: True
+  Recall@5: True
+
+Test 11: format money with dollar sign
+  Expected: format_currency in utils/string_helpers.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 12: convert camelCase to snake_case
+  Expected: convert_to_snake_case in utils/string_helpers.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 13: insert new record into database table
+  Expected: insert_record in data/database.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 14: find record by ID
+  Expected: find_by_id in data/database.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 15: update existing database record
+  Expected: update_record in data/database.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 16: bulk insert multiple rows
+  Expected: batch_insert in data/database.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 17: make GET request to API endpoint
+  Expected: get in api/http_client.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 18: send POST request with JSON data
+  Expected: post in api/http_client.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 19: upload file to server
+  Expected: upload_file in api/http_client.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 20: retry failed API calls
+  Expected: retry_request in api/http_client.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 21: process credit card payment
+  Expected: charge_credit_card in services/payment_processor.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 22: calculate payment processing fees
+  Expected: calculate_processing_fee in services/payment_processor.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 23: issue refund to customer
+  Expected: refund_payment in services/payment_processor.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 24: set up recurring billing
+  Expected: create_subscription in services/payment_processor.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 25: check user has admin permission
+  Expected: has_permission in models/user.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 26: deactivate user account
+  Expected: deactivate_account in models/user.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 27: get all active users
+  Expected: get_active_users in models/user.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 28: search users by email
+  Expected: search_users_by_email in models/user.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 29: sort array using quicksort
+  Expected: quick_sort in algorithms/sorting.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 30: binary search in sorted list
+  Expected: binary_search in algorithms/sorting.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 31: calculate compound interest
+  Expected: compound_interest in math/calculations.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 32: check if number is prime
+  Expected: is_prime in math/calculations.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 33: calculate mean median mode
+  Expected: calculate_statistics in math/calculations.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+Test 34: generate fibonacci sequence
+  Expected: fibonacci in math/calculations.py
+  Found: Yes
+  Rank: 1
+  Recall@1: True
+  Recall@3: True
+  Recall@5: True
+
+================================================================================
+SUMMARY
+================================================================================
+Total tests: 34
+Found: 34 (100.0%)
+Recall@1: 31 (91.2%)
+Recall@3: 34 (100.0%)
+Recall@5: 34 (100.0%)
