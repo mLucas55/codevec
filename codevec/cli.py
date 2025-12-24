@@ -22,7 +22,8 @@ def indexer():
         print("Usage: vec-index <root_path>")
         print('Example: vec-index ./my-project')
         sys.exit(1)
-    
+
+    print("Initializing index system...")
     from codevec.index import index_codebase
     root_path = sys.argv[1]
     index_codebase(root_path)
@@ -35,6 +36,7 @@ def searcher():
     
     query = " ".join(sys.argv[1:])  # Join all args in case query has spaces
 
+    print(f"Initializing search system...")
     from codevec.search import search_code
     search_code(query)
 
@@ -71,18 +73,18 @@ def _configure_embedding_model(configure_model, configure_api_key, get_model_typ
     
     if choice == "1":
         configure_model("local")
-        print("\n✓ Configuration saved: Using local embeddings")
+        print("\nConfiguration saved: Using local embeddings")
     elif choice == "2":
         configure_model("gemini")
         api_key = input("\nEnter your Gemini API key: ").strip()
         if api_key:
             configure_api_key(api_key)
-            print("\n✓ Configuration saved: Using Gemini embeddings")
+            print("\nConfiguration saved: Using Gemini embeddings")
         else:
-            print("\n✗ Error: API key cannot be empty")
+            print("\nError: API key cannot be empty")
             sys.exit(1)
     else:
-        print("\n✗ Error: Invalid choice. Please enter 1 or 2")
+        print("\nError: Invalid choice. Please enter 1 or 2")
         sys.exit(1)
 
 
@@ -99,10 +101,10 @@ def _configure_reranking(configure_reranking, get_reranking):
     
     if choice == "1":
         configure_reranking("True")
-        print("\n✓ Configuration saved: Reranking enabled")
+        print("\nConfiguration saved: Reranking enabled")
     elif choice == "2":
         configure_reranking("False")
-        print("\n✓ Configuration saved: Reranking disabled")
+        print("\nConfiguration saved: Reranking disabled")
     else:
-        print("\n✗ Error: Invalid choice. Please enter 1 or 2")
+        print("\nError: Invalid choice. Please enter 1 or 2")
         sys.exit(1)

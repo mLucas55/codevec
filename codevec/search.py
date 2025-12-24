@@ -2,31 +2,18 @@ import sys
 import logging
 
 # Configure logging before heavy imports
-logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
+logging.basicConfig(level=logging.WARNING, format='%(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
 logging.getLogger('sentence_transformers').setLevel(logging.WARNING)
-
-logger.info("Initializing search system...")
 
 import chromadb
 from codevec.model_loader import ModelLoader
 
 # Load embedding model and optional reranker
-logger.info("Loading models...")
 model_loader = ModelLoader()
 embedder = model_loader.embedder
 reranker = model_loader.reranker
 reranking_enabled = model_loader.reranking_enabled
-
-# Connect to ChromaDB
-client = chromadb.PersistentClient(path="./chroma_db", settings=chromadb.Settings(anonymized_telemetry=False))
-
-try:
-    collection = client.get_collection("code_index")
-except Exception as e:
-    logger.error("Could not load index. Have you run index.py first?")
-    logger.error(f"Details: {e}")
-    sys.exit(1)
 
 
 def generate_query_embedding(query):
@@ -65,7 +52,17 @@ def format_results(documents, metadatas, distances, n_results):
 
 def search_code(query, n_results=5):
     """Search the indexed codebase for relevant code snippets."""
-    logger.info(f"Searching for: '{query}'")
+
+    # Connect to ChromaDB
+    client = chromadb.PersistentClient(path="./chroma_db", settings=chromadb.Settings(anonymized_telemetry=False))
+
+    try:
+        collection = client.get_collection("code_index")
+    except Exception as e:
+        logger.error("Could not load index. Have you run index.py first?")
+        logger.error(f"Details: {e}")
+        sys.exit(1)
+        print(f"Searching for: '{query}'")
     
     query_embedding = generate_query_embedding(query)
     
@@ -77,7 +74,7 @@ def search_code(query, n_results=5):
     )
     
     if not raw_results['documents'][0]:
-        logger.info("No results found")
+        print("No results found")
         return
 
     # Process results
@@ -98,7 +95,7 @@ def search_code(query, n_results=5):
         )
 
     # Display results
-    logger.info(f"Found {len(results)} results")
+    print(f"Found {len(results)} results")
     print("\n" + "=" * 80)
 
     for i, result in enumerate(results, start=1):
@@ -118,8 +115,8 @@ def search_code(query, n_results=5):
         print("├" + "─" * 79)
         
         # Location
-        print(f"│ 📁 {metadata['file_path']}")
-        print(f"│ 🔹 Function: {metadata['name']} (line {metadata['line']})")
+        print(f"│ 📁 File: {metadata['file_path']}")
+        print(f"│ ⚙️  Function: {metadata['name']} (line {metadata['line']})")
         print("├" + "─" * 79)
         
         # Code preview (first 20 lines)

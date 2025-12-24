@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='codevec',
-    version='0.3',
+    version='0.1',
     author="Lucas Monroe",
     author_email="lucas.i.monroe1@gmail.com",
     packages=find_packages(),
