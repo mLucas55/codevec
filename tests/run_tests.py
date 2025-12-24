@@ -1,14 +1,22 @@
 """Automated test runner for semantic search system"""
 import re
 import chromadb
+import logging
 from datetime import datetime
-from config import set_model
+from codevec.model_loader import create_embedder
 from sentence_transformers import CrossEncoder
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(message)s'
+)
+logger = logging.getLogger(__name__)
 
 # Initialize components
 reranker = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
-embedder = set_model()
-client = chromadb.PersistentClient(path="./chroma_db")
+embedder = create_embedder()
+client = chromadb.PersistentClient(path="./chroma_db", settings=chromadb.Settings(anonymized_telemetry=False))
 collection = client.get_collection("code_index")
 
 def generate_query_embedding(query):
@@ -222,6 +230,6 @@ if __name__ == "__main__":
     try:
         run_all_tests()
     except Exception as e:
-        print(f"\n❌ Error running tests: {e}")
+        logger.error(f"Error running tests: {e}")
         import traceback
         traceback.print_exc()

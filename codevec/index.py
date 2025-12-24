@@ -1,23 +1,25 @@
-import chromadb
-
+import logging
 from pathlib import Path
 import ast
 import sys
 
-from config import set_model
+# Configure logging first, before heavy imports
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(levelname)s: %(message)s'
+)
+logger = logging.getLogger(__name__)
 
-embedder = set_model()
+logger.info("Initializing indexer...")
 
+import chromadb
+from codevec.model_loader import ModelLoader
 
-# Create persistent storage
-client = chromadb.PersistentClient(path="./chroma_db")
+logger.info("Loading embedder...")
+model_loader = ModelLoader()
+embedder = model_loader.embedder
+logger.debug("Model loaded")
 
-# Create a collection
-try:
-    client.delete_collection("code_index")
-except:
-    pass
-collection = client.create_collection(name="code_index")
 
 def generate_embeddings(texts):
     return embedder.embed(texts)
@@ -65,7 +67,17 @@ def extract_functions_ast(content):
 
 def index_codebase(root_path):
     """Index all Python files in the specified directory"""
-    print(f"📂 Indexing codebase at: {root_path}")
+    logger.info(f"Indexing codebase at: {root_path}")
+    
+    # Create persistent storage
+    client = chromadb.PersistentClient(path="./chroma_db", settings=chromadb.Settings(anonymized_telemetry=False))
+
+    # Create a fresh collection (delete existing one if present)
+    try:
+        client.delete_collection("code_index")
+    except:
+        pass
+    collection = client.create_collection(name="code_index")
     
     chunks = []       # The code itself
     metadatas = []    # Info about each chunk
@@ -73,7 +85,7 @@ def index_codebase(root_path):
     chunk_id = 0      # Counter for formatting
     
     for file_path, content in walk_codebase(root_path):
-        print(f"Found: {file_path}")
+        logger.debug(f"Found: {file_path}")
         functions = extract_functions_ast(content)
         
         for func in functions:
@@ -89,10 +101,10 @@ def index_codebase(root_path):
             ids.append(f"chunk_{chunk_id}")
             chunk_id += 1
 
-    print(f"\n🔮 Generating embeddings for {len(chunks)} code chunks...")
+    logger.info(f"Generating embeddings for {len(chunks)} code chunks...")
     embeddings = generate_embeddings(chunks)
 
-    print("💾 Storing in ChromaDB...")
+    logger.info("Storing in ChromaDB...")
     collection.add(
         ids=ids,
         documents=chunks,
@@ -100,7 +112,7 @@ def index_codebase(root_path):
         metadatas=metadatas
     )
     
-    print(f"✅ Indexing complete! Indexed {len(chunks)} functions.")
+    logger.info(f"Indexing complete! {len(chunks)} functions indexed successfully.")
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:

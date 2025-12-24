@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from google import genai
 from google.genai import types
-import chromadb.utils.embedding_functions as embedding_functions
+from sentence_transformers import SentenceTransformer
 
 class Embedder(ABC):
     @abstractmethod
@@ -12,15 +12,13 @@ class Embedder(ABC):
 class LocalEmbedder(Embedder):
     def __init__(self, model_name: str = "all-MiniLM-L6-v2"):
         """
-        Initialize the local embedder using ChromaDB's sentence transformers.
+        Initialize the local embedder using sentence-transformers.
         
         Args:
             model_name: The sentence-transformers model to use. 
-                       Default is 'all-MiniLM-L6-v2' which is a fast and leightweight model.
+                       Default is 'all-MiniLM-L6-v2' which is a fast and lightweight model.
         """
-        self.embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction(
-            model_name=model_name
-        )
+        self.model = SentenceTransformer(model_name)
     
     def embed(self, texts: list[str], task_type: str = "document") -> list[list[float]]:
         """
@@ -33,7 +31,8 @@ class LocalEmbedder(Embedder):
         Returns:
             List of embedding vectors (each vector is a list of floats)
         """
-        return self.embedding_function(texts)
+        embeddings = self.model.encode(texts, convert_to_numpy=True)
+        return embeddings.tolist()
 
 
 class GeminiEmbedder(Embedder):
