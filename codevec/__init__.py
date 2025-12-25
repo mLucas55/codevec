@@ -1,1 +1,1 @@
-from .cli import indexer, searcher, configurator, help
+from .cli import indexer, searcher, help

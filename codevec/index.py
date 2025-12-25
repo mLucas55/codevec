@@ -1,7 +1,6 @@
 import logging
 from pathlib import Path
 import ast
-import sys
 
 # Configure logging first, before heavy imports
 logging.basicConfig(
@@ -11,10 +10,10 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 import chromadb
-from codevec.model_loader import ModelLoader
+from codevec.models import create_embedder
 
-model_loader = ModelLoader()
-embedder = model_loader.embedder
+
+embedder = create_embedder()
 
 
 def generate_embeddings(texts):
@@ -111,12 +110,14 @@ def index_codebase(root_path):
     
     print(f"Indexing complete. {len(chunks)} functions indexed.")
 
-if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python index.py <root_path>")
-        print('Example: python index.py ./test-repo')
-        sys.exit(1)
-    
-    root_path = sys.argv[1]
 
-    index_codebase(root_path)
+
+#if __name__ == "__main__":
+ #   if len(sys.argv) < 2:
+  #      print("Usage: python index.py <root_path>")
+   #     print('Example: python index.py ./test-repo')
+    #    sys.exit(1)
+    #
+    #root_path = sys.argv[1]
+
+    #index_codebase(root_path)

@@ -7,13 +7,11 @@ logger = logging.getLogger(__name__)
 logging.getLogger('sentence_transformers').setLevel(logging.WARNING)
 
 import chromadb
-from codevec.model_loader import ModelLoader
+from codevec.models import create_embedder, create_reranker
 
-# Load embedding model and optional reranker
-model_loader = ModelLoader()
-embedder = model_loader.embedder
-reranker = model_loader.reranker
-reranking_enabled = model_loader.reranking_enabled
+# Load embedding model and reranker
+embedder = create_embedder()
+reranker = create_reranker()
 
 
 def generate_query_embedding(query):
@@ -37,19 +35,6 @@ def rerank(query, documents, metadatas, distances, n_results):
     return results
 
 
-def format_results(documents, metadatas, distances, n_results):
-    """Format raw vector search results into standard structure."""
-    results = []
-    for i in range(min(n_results, len(documents))):
-        results.append({
-            'document': documents[i],
-            'metadata': metadatas[i],
-            'distance': distances[i],
-            'rerank_score': None
-        })
-    return results
-
-
 def search_code(query, n_results=5):
     """Search the indexed codebase for relevant code snippets."""
 
@@ -66,8 +51,8 @@ def search_code(query, n_results=5):
     
     query_embedding = generate_query_embedding(query)
     
-    # Fetch extra results if reranking (reranker will filter to top n)
-    fetch_count = n_results * 2 if reranking_enabled else n_results
+    # Fetch extra results for reranking (reranker will filter to top n)
+    fetch_count = n_results * 2
     raw_results = collection.query(
         query_embeddings=[query_embedding],
         n_results=fetch_count
@@ -77,22 +62,14 @@ def search_code(query, n_results=5):
         print("No results found")
         return
 
-    # Process results
-    if reranking_enabled:
-        results = rerank(
-            query,
-            raw_results['documents'][0],
-            raw_results['metadatas'][0],
-            raw_results['distances'][0],
-            n_results
-        )
-    else:
-        results = format_results(
-            raw_results['documents'][0],
-            raw_results['metadatas'][0],
-            raw_results['distances'][0],
-            n_results
-        )
+    # Rerank results for better relevance
+    results = rerank(
+        query,
+        raw_results['documents'][0],
+        raw_results['metadatas'][0],
+        raw_results['distances'][0],
+        n_results
+    )
 
     # Display results
     print(f"Found {len(results)} results")
