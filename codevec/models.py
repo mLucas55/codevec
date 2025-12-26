@@ -8,7 +8,7 @@ class LocalEmbedder:
         self.model = SentenceTransformer(model_name)
     
     def embed(self, texts: list[str], task_type: str = "document") -> list[list[float]]:
-        embeddings = self.model.encode(texts, convert_to_numpy=True)
+        embeddings = self.model.encode(texts, convert_to_numpy=True, normalize_embeddings=True)
         return embeddings.tolist()
 
 class RemoteEmbedder:
@@ -18,8 +18,12 @@ class RemoteEmbedder:
         self.url = url
     
     def embed(self, texts: list[str], task_type: str = "document") -> list[list[float]]:
-        response = requests.post(f"{self.url}/embed", json={"texts": texts})
-        return response.json()["embeddings"]
+        try:
+            response = requests.post(f"{self.url}/embed", json={"texts": texts}, timeout=60)
+            response.raise_for_status()
+            return response.json()["embeddings"]
+        except requests.RequestException as e:
+            raise ConnectionError(f"Failed to connect to embedding server at {self.url}: {e}") from e
 
 class LocalReranker:
     """Cross-encoder reranker for improving search result relevance."""
@@ -38,8 +42,12 @@ class RemoteReranker:
         self.url = url
     
     def rank(self, query: str, documents: list[str], return_documents: bool = False):
-        response = requests.post(f"{self.url}/rerank", json={"query": query, "documents": documents})
-        return response.json()["rankings"]
+        try:
+            response = requests.post(f"{self.url}/rerank", json={"query": query, "documents": documents}, timeout=60)
+            response.raise_for_status()
+            return response.json()["rankings"]
+        except requests.RequestException as e:
+            raise ConnectionError(f"Failed to connect to reranker server at {self.url}: {e}") from e
 
 
 # Cache server status to avoid multiple health checks
@@ -50,7 +58,7 @@ def is_server_running(url="http://localhost:8000"):
     if _server_status is None:
         try:
             _server_status = requests.get(f"{url}/health", timeout=1).ok
-        except:
+        except requests.RequestException:
             _server_status = False
     return _server_status
 

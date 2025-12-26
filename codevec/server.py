@@ -46,15 +46,3 @@ def rerank_documents(request: RerankRequest):
     # Convert numpy floats to Python floats for JSON serialization
     rankings = [{"corpus_id": r["corpus_id"], "score": float(r["score"])} for r in results]
     return {"rankings": rankings}
-
-
-def run_server(host: str = "0.0.0.0", port: int = 8000):
-    """Run the embedding server."""
-    print("Closing this terminal will terminate the server")
-    print("Launching server...")
-    uvicorn.run(
-        "codevec.server:app",
-        host=host,
-        port=port,
-        reload=False,
-    )

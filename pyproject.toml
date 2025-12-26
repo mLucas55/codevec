@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "codevec"
+version = "1.0.0"
+description = "Semantic search for functions in Python codebases"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "GPL-3.0-or-later"
+authors = [
+    {name = "Lucas Monroe", email = "lucas.i.monroe1@gmail.com"}
+]
+keywords = ["semantic search", "code search", "embeddings", "vector search", "python"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Text Processing :: Indexing",
+]
+dependencies = [
+    "chromadb==1.3.7",
+    "sentence-transformers==5.2.0",
+    "fastapi>=0.100.0",
+    "uvicorn>=0.23.0",
+    "requests>=2.28.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/mlucas55/codevec"
+"Bug Tracker" = "https://github.com/mlucas55/codevec/issues"
+"Source" = "https://github.com/mlucas55/codevec"
+
+[project.scripts]
+vec = "codevec:show_help"
+vec-index = "codevec:indexer"
+vec-search = "codevec:searcher"
+vec-server = "codevec.cli:run_server"
+
+[tool.setuptools.packages.find]
+exclude = ["tests", "tests.*"]

@@ -1,13 +1,30 @@
-# codebase-semantic-search
+# codevec
 
-A semantic search tool for Python codebases using AI embeddings. Index your code once, then search using natural language to find relevant functions instantly. Powered by Google Gemini embeddings and ChromaDB vector storage. Can be quickly modified to support locally hosted embedding models as well.
+Codevec is a semantic search tool for finding python functions in your codebases. Index and embed your codebase, then search for functions using natural language to find relevant results in seconds.
 
-**Quick Start:**
+## Installation
+
+```bash
+pip install codevec
+```
+
+## Quick Start
+
 ```bash
 # Index your codebase
-python index.py ./your-project
+vec-index ./your-project
 
-# Search with natural language
-python search.py "authentication logic"
-python search.py "calculate factorial"
+# Search with natural language  
+vec-search authentication logic
+vec-search "email validation" --repo ./your-project
 ```
+
+## Optional: Run embedding server
+
+For faster repeated searches, run the embedding server to keep models loaded in memory:
+
+```bash
+vec-server  # Starts server on localhost:8000
+```
+
+Codevec will automatically use the server when available.

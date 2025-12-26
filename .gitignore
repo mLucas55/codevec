@@ -2,3 +2,9 @@
 chroma_db
 *.ini
 __pycache__
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+.codevec/

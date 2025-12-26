@@ -1,6 +1,6 @@
 import sys
 
-def help():
+def show_help():
         print("""
 Usage: vec-<command> [options]
 
@@ -62,3 +62,17 @@ def searcher():
     print(f"Initializing search system...")
     from codevec.search import search_code
     search_code(query, root_path=root_path)
+
+def run_server(host: str = "0.0.0.0", port: int = 8000):
+    """Run the embedding server."""
+    import uvicorn
+    
+    print(f"\nStarting embedding server on http://{host}:{port}")
+    print("   Press CTRL+C to stop\n")
+    
+    uvicorn.run(
+        "codevec.server:app",
+        host=host,
+        port=port,
+        reload=False,
+    )
