@@ -21,7 +21,6 @@ pip install codevec
 
 **Fast & Efficient** — Index, search, and get results within seconds of installing Codevec
 
-**Optional Model Server** — Keep embedding models in memory for quicker search results
 
 
 > **Note:** Codevec currently indexes functions only. Module-level code is not included in search results.
@@ -62,7 +61,7 @@ vec-search "email validation" --repo ./your-project
 
 ## Optional: Model server
 
-Run the embedding server to keep models in memory for faster searches:
+Run the embedding server to keep models loaded in memory for faster searches:
 
 ```bash
 vec-server  # Starts server on localhost:8000
