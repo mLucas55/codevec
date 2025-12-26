@@ -4,7 +4,6 @@ chroma_db
 __pycache__
 
 # Build artifacts 
-dist/
 build/
 *.egg-info/
 .codevec/
