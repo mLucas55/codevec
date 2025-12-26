@@ -7,7 +7,7 @@ Usage: vec-<command> [options]
 Commands:
     index <path>              Index a codebase (creates .codevec/ in the target)
     search <query> [options]  Search indexed code
-    server                    Launch a FastAPI server to keep embedding and cross-encoding models loaded in ram
+    server                    Run background daemon to keep models loaded in memory
 
 Search Options:
     --repo <path>             Search a specific repository (default: auto-detect)

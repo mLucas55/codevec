@@ -1,30 +1,79 @@
-# codevec
 
-Codevec is a semantic search tool for finding python functions in your codebases. Index and embed your codebase, then search for functions using natural language to find relevant results in seconds.
+<div align="center">
 
-## Installation
+# Codevec
+
+#### Codevec is the user-friendly semantic search tool for Python codebases.
+
+
+![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
+
+</div>
+
 
 ```bash
 pip install codevec
 ```
 
+## Overview
+
+**Natural Language Search** — Find Python functions using plain English queries instead of grepping through code
+
+**Fast & Efficient** — Index, search, and get results within seconds of installing Codevec
+
+**Optional Model Server** — Keep embedding models in memory for quicker search results
+
+
+> **Note:** Codevec currently indexes functions only. Module-level code is not included in search results.
+
+## Why Codevec over Copilot?
+
+**No Token Limits** — Runs entirely on lightweight local models, so you can search as much as you want without usage caps or costs
+
+**Speed** — Often faster at finding specific functions since it's purpose-built for code search, returning results in seconds
+
+**Privacy** — Your code never leaves your machine
+
+
 ## Quick Start
 
-```bash
-# Index your codebase
-vec-index ./your-project
 
-# Search with natural language  
+### 1. Index your codebase
+
+
+
+```bash
+vec-index ./your/project/file/path
+```
+
+
+### 2. Search with natural language
+
+#### Run from inside the indexed codebase:
+```bash
 vec-search authentication logic
+```
+
+#### Run from outside the indexed codebase:
+```bash
 vec-search "email validation" --repo ./your-project
 ```
 
-## Optional: Run embedding server
 
-For faster repeated searches, run the embedding server to keep models loaded in memory:
+## Optional: Model server
+
+Run the embedding server to keep models in memory for faster searches:
 
 ```bash
 vec-server  # Starts server on localhost:8000
+            # Codevec will automatically use the server when available.
 ```
 
-Codevec will automatically use the server when available.
+## How It Works
+
+**Indexing** — Codevec walks your codebase to discover Python functions, then uses lightweight local models to generate embeddings
+
+**ChromaDB Storage** — Embeddings for indexed code are stored in a ChromaDB collection located at `.codevec/` in your project root
+
+
+**Re-indexing** — Simply run `vec-index` again on the same directory to update the index with new or modified functions
