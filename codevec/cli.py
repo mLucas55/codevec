@@ -1,7 +1,14 @@
+"""Command-line interface for CodeVec.
+
+Provides entry points for indexing codebases, searching indexed code,
+and running the embedding server.
+"""
+
 import sys
 
 def show_help():
-        print("""
+    """Display help message with available commands and usage examples."""
+    print("""
 Usage: vec-<command> [options]
 
 Commands:
@@ -20,7 +27,8 @@ Examples:
 """)
 
 def indexer():
-    """CLI entry point for indexing a codebase"""
+    """CLI entry point for indexing a codebase.
+    """
     if len(sys.argv) < 2:
         print("Usage: vec-index <path>")
         print('Example: vec-index ./my-project')
@@ -32,7 +40,8 @@ def indexer():
     index_codebase(root_path)
 
 def searcher():
-    """CLI entry point for searching indexed code"""
+    """CLI entry point for searching indexed code.
+    """
     if len(sys.argv) < 2:
         print("Usage: vec-search <query> [--repo <path>]")
         print('Example: vec-search "email validation"')
@@ -64,7 +73,15 @@ def searcher():
     search_code(query, root_path=root_path)
 
 def run_server(host: str = "0.0.0.0", port: int = 8000):
-    """Run the embedding server."""
+    """Run the embedding server.
+    
+    Starts a FastAPI server that keeps embedding models in memory for faster
+    processing. This improves performance for repeated index/search operations.
+    
+    Args:
+        host: Host address to bind to (default: "0.0.0.0")
+        port: Port number to listen on (default: 8000)
+    """
     import uvicorn
     
     print(f"\nStarting embedding server on http://{host}:{port}")

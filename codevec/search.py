@@ -1,3 +1,9 @@
+"""Semantic code search functionality.
+
+Handles searching indexed codebases using natural language queries,
+including embedding generation, vector search, and result reranking.
+"""
+
 import sys
 import logging
 
@@ -15,12 +21,30 @@ reranker = create_reranker()
 
 
 def generate_query_embedding(query):
-    """Convert query text to embedding vector."""
+    """Convert query text to embedding vector.
+    
+    Args:
+        query: Natural language search query
+        
+    Returns:
+        Embedding vector for the query
+    """
     return embedder.embed([query], task_type="query")[0]
 
 
 def rerank(query, documents, metadatas, distances, n_results):
-    """Reorder results using cross-encoder for better relevance."""
+    """Reorder results using cross-encoder for better relevance.
+    
+    Args:
+        query: Search query string
+        documents: List of document strings from initial search
+        metadatas: Metadata for each document
+        distances: Vector distances from initial search
+        n_results: Number of top results to return
+        
+    Returns:
+        List of top n results with rerank scores
+    """
     ranks = reranker.rank(query, documents, return_documents=False)
     
     results = []
@@ -36,13 +60,27 @@ def rerank(query, documents, metadatas, distances, n_results):
 
 
 def get_db_path(root_path):
-    """Get the ChromaDB storage path for a given repository."""
+    """Get the ChromaDB storage path for a given repository.
+    
+    Args:
+        root_path: Root path of the indexed repository
+        
+    Returns:
+        Absolute path to the .codevec directory
+    """
     from pathlib import Path
     return str(Path(root_path).resolve() / ".codevec")
 
 
 def find_repo_root(start_path=None):
-    """Walk up directory tree to find a .codevec index, similar to how git finds .git"""
+    """Walk up directory tree to find a .codevec index, similar to how git finds .git.
+    
+    Args:
+        start_path: Starting directory (default: current working directory)
+        
+    Returns:
+        Path to repository root containing .codevec, or None if not found
+    """
     from pathlib import Path
     
     if start_path is None:

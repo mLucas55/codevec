@@ -1,3 +1,9 @@
+"""Code indexing functionality for CodeVec.
+
+Handles parsing Python files, extracting functions using AST,
+generating embeddings, and storing them in a ChromaDB collection.
+"""
+
 import logging
 from pathlib import Path
 import ast
@@ -17,10 +23,28 @@ embedder = create_embedder()
 
 
 def generate_embeddings(texts):
+    """Generate vector embeddings for code snippets.
+    
+    Args:
+        texts: List of code strings to embed
+        
+    Returns:
+        List of embedding vectors
+    """
     return embedder.embed(texts)
 
 def walk_codebase(root_path):
-    """Find all Python files in a directory"""
+    """Find all Python files in a directory.
+    
+    Recursively walks the directory tree, skipping hidden directories,
+    __pycache__, and other irrelevant paths.
+    
+    Args:
+        root_path: Root directory to scan
+        
+    Yields:
+        Tuple of (file_path, file_content) for each Python file
+    """
     root = Path(root_path)
     
     for py_file in root.rglob("*.py"):
@@ -33,6 +57,18 @@ def walk_codebase(root_path):
         yield (str(py_file), content)  # Returns (file_path, file_content)
 
 def extract_functions_ast(content):
+    """Extract function definitions from Python code using AST parsing.
+    
+    Args:
+        content: Python source code as a string
+        
+    Returns:
+        List of dicts containing function metadata:
+        - name: Function name
+        - lineno: Starting line number
+        - end_lineno: Ending line number
+        - data: Full function source code
+    """
     lines = content.splitlines()
     
     try:
@@ -60,12 +96,26 @@ def extract_functions_ast(content):
     return functions
 
 def get_db_path(root_path):
-    """Get the ChromaDB storage path for a given repository."""
+    """Get the ChromaDB storage path for a given repository.
+    
+    Args:
+        root_path: Root path of the indexed repository
+        
+    Returns:
+        Absolute path to the .codevec directory
+    """
     return str(Path(root_path).resolve() / ".codevec")
 
 
 def add_to_gitignore(root_path):
-    """Add .codevec to .gitignore if not already present."""
+    """Add .codevec to .gitignore if not already present.
+    
+    Creates .gitignore if it doesn't exist, or appends to existing file.
+    Prevents the index directory from being committed to version control.
+    
+    Args:
+        root_path: Root path of the repository
+    """
     gitignore_path = Path(root_path).resolve() / ".gitignore"
     
     # Check if .codevec is already ignored
@@ -86,7 +136,15 @@ def add_to_gitignore(root_path):
 
 
 def index_codebase(root_path):
-    """Index all Python files in the specified directory"""
+    """Index all Python files in the specified directory.
+    
+    Walks the directory tree, extracts functions from Python files,
+    generates embeddings, and stores them in a ChromaDB collection
+    at .codevec/. Creates or replaces existing index.
+    
+    Args:
+        root_path: Root directory of the codebase to index
+    """
     print(f"Indexing codebase: {root_path}")
     
     # Add .codevec to .gitignore

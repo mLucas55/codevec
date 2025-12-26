@@ -1,7 +1,24 @@
+"""CodeVec: Semantic code search using embeddings.
+
+This package provides tools for indexing and searching codebases using
+embeddings, enabling natural language queries over your code.
+"""
+
 __version__ = "1.0.0"
 
 # Lazy imports to avoid loading heavy dependencies at package import time
 def __getattr__(name):
+    """Lazy attribute loader for heavy dependencies.
+    
+    Args:
+        name: The attribute name to load
+        
+    Returns:
+        The requested attribute
+        
+    Raises:
+        AttributeError: If the attribute doesn't exist
+    """
     if name == "indexer":
         from .cli import indexer
         return indexer
