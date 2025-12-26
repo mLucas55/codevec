@@ -61,7 +61,7 @@ vec-search "email validation" --repo ./your-project
 
 ## Optional: Model server
 
-Run the embedding server to keep models loaded in memory for faster searches:
+Run the model server to keep models loaded in memory for faster searches:
 
 ```bash
 vec-server  # Starts server on localhost:8000
