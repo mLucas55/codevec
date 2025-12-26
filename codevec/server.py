@@ -50,6 +50,8 @@ def rerank_documents(request: RerankRequest):
 
 def run_server(host: str = "0.0.0.0", port: int = 8000):
     """Run the embedding server."""
+    print("Closing this terminal will terminate the server")
+    print("Launching server...")
     uvicorn.run(
         "codevec.server:app",
         host=host,
