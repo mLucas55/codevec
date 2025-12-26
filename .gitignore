@@ -3,7 +3,7 @@ chroma_db
 *.ini
 __pycache__
 
-# Build artifacts
+# Build artifacts 
 dist/
 build/
 *.egg-info/
