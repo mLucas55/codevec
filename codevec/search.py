@@ -35,19 +35,62 @@ def rerank(query, documents, metadatas, distances, n_results):
     return results
 
 
-def search_code(query, n_results=5):
-    """Search the indexed codebase for relevant code snippets."""
+def get_db_path(root_path):
+    """Get the ChromaDB storage path for a given repository."""
+    from pathlib import Path
+    return str(Path(root_path).resolve() / ".codevec")
 
-    # Connect to ChromaDB
-    client = chromadb.PersistentClient(path="./chroma_db", settings=chromadb.Settings(anonymized_telemetry=False))
+
+def find_repo_root(start_path=None):
+    """Walk up directory tree to find a .codevec index, similar to how git finds .git"""
+    from pathlib import Path
+    
+    if start_path is None:
+        start_path = Path.cwd()
+    else:
+        start_path = Path(start_path).resolve()
+    
+    current = start_path
+    while current != current.parent:  # Stop at filesystem root
+        if (current / ".codevec").is_dir():
+            return str(current)
+        current = current.parent
+    
+    # Check root directory too
+    if (current / ".codevec").is_dir():
+        return str(current)
+    
+    return None
+
+
+def search_code(query, root_path=None, n_results=5):
+    """Search the indexed codebase for relevant code snippets.
+    
+    Args:
+        query: Search query string
+        root_path: Path to indexed repo. If None, auto-detects by walking up from CWD.
+        n_results: Number of results to return
+    """
+    # Auto-detect repo if not provided
+    if root_path is None:
+        root_path = find_repo_root()
+        if root_path is None:
+            print("Error: No indexed repository found.")
+            print("Either run this command from within an indexed project,")
+            print("or specify a path: vec-search 'query' --repo /path/to/project")
+            print("\nTo index a project: vec-index /path/to/project")
+            sys.exit(1)
+
+    # Connect to ChromaDB in the repository's .codevec directory
+    db_path = get_db_path(root_path)
+    client = chromadb.PersistentClient(path=db_path, settings=chromadb.Settings(anonymized_telemetry=False))
 
     try:
         collection = client.get_collection("code_index")
     except Exception as e:
-        logger.error("Could not load index. Have you run index.py first?")
-        logger.error(f"Details: {e}")
+        print(f"Error: Could not load index at {db_path}")
+        print("Have you indexed this repository? Run: vec-index /path/to/project")
         sys.exit(1)
-        print(f"Searching for: '{query}'")
     
     query_embedding = generate_query_embedding(query)
     

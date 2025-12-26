@@ -60,12 +60,42 @@ def extract_functions_ast(content):
     
     return functions
 
+def get_db_path(root_path):
+    """Get the ChromaDB storage path for a given repository."""
+    return str(Path(root_path).resolve() / ".codevec")
+
+
+def add_to_gitignore(root_path):
+    """Add .codevec to .gitignore if not already present."""
+    gitignore_path = Path(root_path).resolve() / ".gitignore"
+    
+    # Check if .codevec is already ignored
+    if gitignore_path.exists():
+        content = gitignore_path.read_text()
+        if ".codevec" in content.splitlines():
+            return  # Already ignored
+        # Append to existing file
+        with open(gitignore_path, "a") as f:
+            if not content.endswith("\n"):
+                f.write("\n")
+            f.write(".codevec\n")
+    else:
+        # Create new .gitignore
+        gitignore_path.write_text(".codevec\n")
+    
+    print("Added .codevec to .gitignore")
+
+
 def index_codebase(root_path):
     """Index all Python files in the specified directory"""
     print(f"Indexing codebase: {root_path}")
     
-    # Create persistent storage
-    client = chromadb.PersistentClient(path="./chroma_db", settings=chromadb.Settings(anonymized_telemetry=False))
+    # Add .codevec to .gitignore
+    add_to_gitignore(root_path)
+    
+    # Create persistent storage inside the indexed repository
+    db_path = get_db_path(root_path)
+    client = chromadb.PersistentClient(path=db_path, settings=chromadb.Settings(anonymized_telemetry=False))
 
     # Create a fresh collection (delete existing one if present)
     try:
@@ -109,15 +139,3 @@ def index_codebase(root_path):
     )
     
     print(f"Indexing complete. {len(chunks)} functions indexed.")
-
-
-
-#if __name__ == "__main__":
- #   if len(sys.argv) < 2:
-  #      print("Usage: python index.py <root_path>")
-   #     print('Example: python index.py ./test-repo')
-    #    sys.exit(1)
-    #
-    #root_path = sys.argv[1]
-
-    #index_codebase(root_path)

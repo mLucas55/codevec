@@ -42,11 +42,18 @@ class RemoteReranker:
         return response.json()["rankings"]
 
 
+# Cache server status to avoid multiple health checks
+_server_status = None
+
 def is_server_running(url="http://localhost:8000"):
-    try:
-        return requests.get(f"{url}/health", timeout=1).ok
-    except:
-        return False
+    global _server_status
+    if _server_status is None:
+        try:
+            _server_status = requests.get(f"{url}/health", timeout=1).ok
+        except:
+            _server_status = False
+    return _server_status
+
 
 def create_embedder():
     """Create an embedder (remote if server running, else local)."""
