@@ -17,9 +17,9 @@ pip install codevec
 
 ## Overview
 
-Codevec is a semantic search tool for Python codebases that lets you find functions using plain English queries, no need to know exact function names or keywords to grep.
+Codevec is a semantic search tool for Python codebases that lets you find functions using plain English queries—no need to know exact function names or keywords to grep.
 
-It runs entirely on lightweight local models, so indexing and searchin a codebase takes only seconds. Being entirely local, your code never leaves your machine, there are no API calls, no usage limits, and no external dependencies.
+It runs entirely on lightweight local models, so indexing and searching a codebase take only seconds. Being entirely local, your code never leaves your machine: no API calls, no usage limits, and no external dependencies.
 
 Unlike general-purpose AI assistants, Codevec is purpose-built for code search. It focuses on quickly pinpointing relevant function definitions without verbose explanations, making it especially effective for navigating large or unfamiliar repositories.
 
