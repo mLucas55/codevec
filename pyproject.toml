@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "codevec"
-version = "1.0.1"
+version = "1.0.2"
 description = "Semantic search for functions in Python codebases"
 readme = "README.md"
 requires-python = ">=3.10"
