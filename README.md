@@ -19,13 +19,13 @@ pip install codevec
 
 **Natural Language Search** — Find Python functions using plain English queries instead of grepping through code
 
-**Fast & Efficient** — Index, search, and get results within seconds of installing Codevec
+**Fast** — Index, search, and get results within seconds of installing Codevec
 
 
 
 > **Note:** Codevec currently indexes functions only. Module-level code is not included in search results.
 
-## Why Codevec over Copilot?
+### Why Codevec over Copilot?
 
 **No Token Limits** — Runs entirely on lightweight local models, so you can search as much as you want without usage caps or costs
 
