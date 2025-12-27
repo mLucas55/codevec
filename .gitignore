@@ -8,3 +8,4 @@ build/
 *.egg-info/
 .codevec/
 .DS_Store
+build_commands.txt
