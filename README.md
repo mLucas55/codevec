@@ -84,7 +84,7 @@ vec-server  # Starts server on localhost:8000
 
 ## How It Works
 
-**Indexing & Embedding** — Codevec walks your codebase and uses AST parsing to discover Python functions, then uses a lightweight local transformer to generate embeddings that get stored in ChromaDB
+**Indexing & Embedding** — Codevec walks your codebase and uses AST parsing to discover Python functions, then uses a lightweight local transformer to generate embeddings
 
 **ChromaDB Storage** — Embeddings are stored in a ChromaDB collection located at `.codevec/` in your project root
 
