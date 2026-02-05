@@ -7,6 +7,7 @@ generating embeddings, and storing them in a ChromaDB collection.
 import logging
 from pathlib import Path
 import ast
+from datetime import datetime
 
 # Configure logging first, before heavy imports
 logging.basicConfig(
@@ -95,7 +96,13 @@ def extract_functions_ast(content):
     
     return functions
 
-def get_db_path(root_path):
+def write_index_time(root_path):
+    codevec_path = get_codevec_path(root_path)
+    timestamp_file = Path(codevec_path) / "last_indexed"
+    timestamp_file.write_text(datetime.now().isoformat())
+
+
+def get_codevec_path(root_path):
     """Get the ChromaDB storage path for a given repository.
     
     Args:
@@ -151,7 +158,7 @@ def index_codebase(root_path):
     add_to_gitignore(root_path)
     
     # Create persistent storage inside the indexed repository
-    db_path = get_db_path(root_path)
+    db_path = get_codevec_path(root_path)
     client = chromadb.PersistentClient(path=db_path, settings=chromadb.Settings(anonymized_telemetry=False))
 
     # Create a fresh collection (delete existing one if present)
@@ -194,5 +201,7 @@ def index_codebase(root_path):
         embeddings=embeddings,
         metadatas=metadatas
     )
+
+    write_index_time(root_path)
     
     print(f"Indexing complete. {len(chunks)} functions indexed.")
