@@ -105,7 +105,7 @@ def read_last_index_time(root_path):
     if timestamp_file.exists():
         last_index = datetime.fromisoformat(timestamp_file.read_text().strip())
         age = datetime.now() - last_index
-        if age > timedelta(hours=3):
+        if age > timedelta(days=3):
             print("WARNING: Index is more than 3 days old - consider reindexing")
 
         
@@ -128,7 +128,7 @@ def search_code(query, root_path=None, n_results=5):
             print("or specify a path: vec-search 'query' --repo /path/to/project")
             print("\nTo index a project: vec-index /path/to/project")
             sys.exit(1)
-            
+
     read_last_index_time(root_path)
     
     # Connect to ChromaDB in the repository's .codevec directory
