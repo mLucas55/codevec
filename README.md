@@ -36,7 +36,7 @@ Unlike general-purpose AI assistants, Codevec is purpose-built for code search. 
 ```bash
 vec-index ./your/project/filepath
 ```
-> **Note:** Re-index after making significant changes to your codebase!
+> **Note:** Reindex after making significant changes to your codebase!
 
 ### 2. Search with natural language
 
@@ -91,4 +91,4 @@ vec-server  # Starts server on localhost:8000
 
 **Searching** — Queries are embedded and matched against ChromaDB using semantic similarity, then results are reranked using a cross-encoder for improved relevance
 
-**Re-indexing** — Simply run `vec-index` again on the same directory to update the index with new or modified functions
+**Reindexing** — Simply run `vec-index` again on the same directory to update the index with new or modified functions

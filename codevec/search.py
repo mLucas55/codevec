@@ -12,6 +12,7 @@ logging.basicConfig(level=logging.WARNING, format='%(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
 logging.getLogger('sentence_transformers').setLevel(logging.WARNING)
 
+from pathlib import Path
 import chromadb
 from codevec.models import create_embedder, create_reranker
 
@@ -59,7 +60,7 @@ def rerank(query, documents, metadatas, distances, n_results):
     return results
 
 
-def get_db_path(root_path):
+def get_codevec_path(root_path):
     """Get the ChromaDB storage path for a given repository.
     
     Args:
@@ -68,7 +69,6 @@ def get_db_path(root_path):
     Returns:
         Absolute path to the .codevec directory
     """
-    from pathlib import Path
     return str(Path(root_path).resolve() / ".codevec")
 
 
@@ -80,9 +80,7 @@ def find_repo_root(start_path=None):
         
     Returns:
         Path to repository root containing .codevec, or None if not found
-    """
-    from pathlib import Path
-    
+    """    
     if start_path is None:
         start_path = Path.cwd()
     else:
@@ -100,6 +98,18 @@ def find_repo_root(start_path=None):
     
     return None
 
+def read_last_index_time(root_path):
+    from datetime import datetime, timedelta
+    codevec_path = get_codevec_path(root_path)
+    timestamp_file = Path(codevec_path) / "last_indexed"
+    if timestamp_file.exists():
+        last_index = datetime.fromisoformat(timestamp_file.read_text().strip())
+        age = datetime.now() - last_index
+        if age > timedelta(days=3):
+            print("WARNING: Index is more than 3 days old - consider reindexing")
+
+        
+    return None
 
 def search_code(query, root_path=None, n_results=5):
     """Search the indexed codebase for relevant code snippets.
@@ -119,8 +129,10 @@ def search_code(query, root_path=None, n_results=5):
             print("\nTo index a project: vec-index /path/to/project")
             sys.exit(1)
 
+    read_last_index_time(root_path)
+    
     # Connect to ChromaDB in the repository's .codevec directory
-    db_path = get_db_path(root_path)
+    db_path = get_codevec_path(root_path)
     client = chromadb.PersistentClient(path=db_path, settings=chromadb.Settings(anonymized_telemetry=False))
 
     try:
